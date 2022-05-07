@@ -8,24 +8,13 @@
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
         <li routerLinkActive="active">
-          <a routerLink="/messages">Messages</a>
+          <a routerLink="/messages" (click)="onSelected('documents')" href="#">Documents</a>
         </li>
         <li routerLinkActive="active">
-          <a routerLink="/contacts">Contacts</a>
+          <a routerLink="/contacts" (click)="onSelected('messages')" href="#">Messages</a>
         </li>
         <li routerLinkActive="active">
-          <a routerLink="/documents">Documents</a>
-        </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown" appDropdown>
-          <a href="#" class="dropdown-toggle" role="button"
-            >User <span class="caret"></span
-          ></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Save Data</a></li>
-            <li><a href="#">Fetch Data</a></li>
-          </ul>
+          <a routerLink="/documents" (click)="onSelected('contacts')" href="#">Contacts</a>
         </li>
       </ul>
     </div>

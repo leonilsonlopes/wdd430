@@ -10,15 +10,10 @@
         </div>
       </div>
     </div>
-    <div class="panel-body">
-      <div class="row" *ngFor="let contact of contacts">
-        <div class="col-md-9">
-          <h4>{{contact._name}}</h4>
-        </div>
-        <div class="col-md-3">
-          <img src="{{contact._imageUrl}}">
-        </div>
-      </div>
+    <div class="panel-body" *ngFor="let one_contact of contacts">
+      
+        <cms-contact-item [contact]="one_contact" (click)="onSelected(one_contact)"></cms-contact-item>
+      
     </div>
   </div>
 </div>
