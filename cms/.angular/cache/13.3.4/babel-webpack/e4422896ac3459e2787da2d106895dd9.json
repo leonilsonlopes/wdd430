@@ -1,0 +1,1 @@
+{"ast":null,"code":"export class Document {\n  //public _children: Array<Document>;\n  constructor(id, name, description, url, children) {\n    this._id = id;\n    this._name = name;\n    this._description = description;\n    this._url = url; //this._children = children\n  }\n\n}","map":null,"metadata":{},"sourceType":"module"}

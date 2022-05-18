@@ -11,8 +11,7 @@ export class HeaderComponent implements OnInit {
 
   constructor() { }
 
-  onSelected(selectedEvent: string)
-  {
+  onSelected(selectedEvent: string) {
     this.selectedFeatureEvent.emit(selectedEvent);
   }
 

@@ -8,7 +8,7 @@ import { Contact } from './contact.model';
 })
 
 export class ContactsComponent implements OnInit {
-  @Input() selectedContact! : Contact; 
+  @Input() selectedContact!: Contact;
 
   constructor() { }
 
