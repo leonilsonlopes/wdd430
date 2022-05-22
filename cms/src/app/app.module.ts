@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header.component';
 import { ContactsComponent } from './contacts/contacts.component';
@@ -12,9 +11,11 @@ import { DocumentsComponent } from './documents/documents.component';
 import { DocumentListComponent } from './documents/document-list/document-list.component';
 import { DocumentItemComponent } from './documents/document-item/document-item.component';
 import { DocumentDetailComponent } from './documents/document-detail/document-detail.component';
-import { MessageItemComponent } from './messages/message-item/message-item.component';
+import { MessagesComponent } from './messages/messages.component';
 import { MessageEditComponent } from './messages/message-edit/message-edit.component';
 import { MessageListComponent } from './messages/message-list/message-list.component';
+import { MessageItemComponent } from './messages/message-item/message-item.component';
+import { DropdownDirective } from './dropdown.directive';
 
 @NgModule({
   declarations: [
@@ -27,12 +28,15 @@ import { MessageListComponent } from './messages/message-list/message-list.compo
     DocumentsComponent,
     DocumentListComponent,
     DocumentItemComponent,
-    DocumentDetailComponent,    
-    MessageItemComponent, MessageEditComponent, MessageListComponent
+    DocumentDetailComponent,
+    MessagesComponent,
+    MessageEditComponent,
+    MessageListComponent,
+    MessageItemComponent,
+    DropdownDirective
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule
+    BrowserModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,1 +1,0 @@
-{"ast":null,"code":"export class Message {\n  constructor(id, subject, msgText, sender) {\n    this._id = id;\n    this._subject = subject;\n    this._msgText = msgText;\n    this._sender = sender;\n  }\n\n}","map":null,"metadata":{},"sourceType":"module"}

@@ -6,10 +6,11 @@
     </div>
   </div>
   <div class="panel-body">
-    <div class="center-panel" *ngFor="let one_document of documents">
-
-      <cms-document-item [document]="one_document" (click)="onSelectedDocument(one_document)"></cms-document-item>
-
+    <div class="center-panel">
+      <cms-document-item
+      *ngFor="let document of documents"
+      [document]="document"
+      (click)="onSelectedDocument(document)"></cms-document-item>
     </div>
   </div>
 
