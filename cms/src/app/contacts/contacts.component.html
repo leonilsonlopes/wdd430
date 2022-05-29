@@ -1,12 +1,8 @@
 <div class="row">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8">
-        <cms-contact-list></cms-contact-list>
-      </div>
-      <div class="col-md-4" *ngIf=selectedContact>
-        <cms-contact-detail [contact]=selectedContact></cms-contact-detail>
-      </div>
-    </div>
+  <div class="col-md-5">
+      <cms-contact-list></cms-contact-list>
+  </div>
+  <div class="col-md-4">
+    <router-outlet></router-outlet>
   </div>
 </div>
