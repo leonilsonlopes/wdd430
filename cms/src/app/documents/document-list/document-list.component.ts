@@ -1,25 +1,43 @@
-import { Component, OnInit} from '@angular/core';
-import { Documents } from '../document.model';
+import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Document } from '../document.model';
 import { DocumentService } from '../document.service';
+import { from, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-document-list',
   templateUrl: './document-list.component.html',
-  styleUrls: ['./document-list.component.css']
+  styleUrls: ['./document-list.component.css'],  
 })
-export class DocumentListComponent implements OnInit {
-  documents: Documents[] = [];
+export class DocumentListComponent implements OnInit, OnDestroy {
+//  @Output() selectedDocumentEvent = new EventEmitter<Document>();
 
-  constructor(private documentService: DocumentService) { }
+  subscription : Subscription | undefined;
+  documents: Document[] = [];
+  
 
-  ngOnInit() {
+  constructor(private documentService : DocumentService) { }
+
+  ngOnInit(): void {
+    // TODO: Correct the documents definition
     this.documents = this.documentService.getDocuments();
-    this.documentService.documentChangedEvent.subscribe(
-      (documents: Documents[]) =>{
-        this.documents = documents;
-      }
-    )
+    this.documentService.documentChangedEvent
+      .subscribe(
+        (documents: Document[]) => {
+          this.documents = documents;
+        }
+      );
+
+      this.subscription = this.documentService.documentListChangedEvent
+      .subscribe(
+        (documentsList: Document[]) =>
+        {
+          this.documents = documentsList;
+        }
+      );
   }
 
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
 
 }

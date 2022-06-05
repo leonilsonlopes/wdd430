@@ -1,24 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Message } from '../message.model';
 import { MessageService } from '../message.service';
 
 @Component({
   selector: 'cms-message-list',
   templateUrl: './message-list.component.html',
-  styleUrls: ['./message-list.component.css']
+  styleUrls: ['./message-list.component.css'],
 })
+
 export class MessageListComponent implements OnInit {
-  
+  @Input('sent_message') element!: Message;
+
   messages: Message[] = [];
+
   constructor(private messageService: MessageService) { }
 
-  ngOnInit(){
+  ngOnInit(): void {
     this.messages = this.messageService.getMessages();
-    this.messageService.messagesChanged.subscribe(
-      (messages: Message[]) => {
-        this.messages = messages;
-      }
-    )
+
+    this.messageService.messageChangedEvent.subscribe((messages: Message[]) => {
+
+      this.messages = messages;
+
+    });
   }
 
   onAddMessage(message: Message) {
@@ -26,4 +30,3 @@ export class MessageListComponent implements OnInit {
   }
 
 }
-

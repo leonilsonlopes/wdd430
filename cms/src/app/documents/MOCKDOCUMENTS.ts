@@ -1,4 +1,4 @@
-import {Documents} from './document.model';
+import {Document} from './document.model';
 
 export const MOCKDOCUMENTS: any[] = [
   {

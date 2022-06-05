@@ -1,3 +1,7 @@
-.detail{
-  margin-left: 0.5em;
+.row {
+    padding: 5px;
+}
+
+button {
+    margin: 2px;
 }

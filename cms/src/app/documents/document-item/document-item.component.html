@@ -1,9 +1,7 @@
-<a 
-  [routerLink]="document.id"
-  routerLinkActive="active"
-  class="list-group-item clearfix documentDiv" >
+<a class="list-group-item clearfix documentDiv" routerLinkActive="active-link" routerLink="{{document.id}}">
   <!-- Display document name here -->
-  {{document?.name}}
+  <div class="">
+    <span class="documentName">{{document.name}} </span>
+    <div class="documentText"></div>
+  </div>
 </a>
-
-

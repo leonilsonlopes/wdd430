@@ -1,45 +1,50 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, Params } from '@angular/router';
-import { WindRefService } from 'src/app/wind-ref.service';
-import { Documents } from '../document.model';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Document } from '../document.model';
 import { DocumentService } from '../document.service';
+import { Router } from '@angular/router';
+import { WindRefService } from '../../../wind-ref.service';
 
 @Component({
   selector: 'cms-document-detail',
   templateUrl: './document-detail.component.html',
   styleUrls: ['./document-detail.component.css']
 })
+
 export class DocumentDetailComponent implements OnInit {
-  document: Documents;
-  id: string;
   nativeWindow: any;
+  document!: Document;
 
   constructor(
     private documentService: DocumentService,
-    private route: ActivatedRoute,
     private router: Router,
-    private windRef: WindRefService) { 
-      this.nativeWindow = windRef.getNativeWindow();
-    }
+    private activatedRoute: ActivatedRoute,
+    private windRefService: WindRefService,
+  ) { }
 
-    ngOnInit(): void {
-      this.route.params.subscribe(
+  ngOnInit(): void {
+    this.activatedRoute.params
+      .subscribe(
         (params: Params) => {
-          this.id = params['id'];
-          this.document = this.documentService.getDocument(this.id);
+          let foundID: string;
+          foundID = params['id'];
+          let documentFound: Document | null = this.documentService.getDocument(foundID);
+          if (documentFound !== null)
+            this.document = documentFound;
         }
       );
+
+    this.nativeWindow = this.windRefService.getNativeWindow();
   }
 
-  onView(){
-    if(this.document.url) {
-      this.nativeWindow.open(this.document.url);
-    }
+  onView(): void {
+    let gotoUrl = this.document.url;
+    this.nativeWindow.open(gotoUrl);
   }
 
-  onDelete(){
+  onDelete() {
     this.documentService.deleteDocument(this.document);
-    this.router.navigate(['/documents']);
+    this.router.navigate(['\documents']);
   }
-  
+
 }

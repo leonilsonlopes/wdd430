@@ -1,34 +1,38 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef  } from '@angular/core';
+import { Component, Directive, Input, OnInit, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 import { Message } from '../message.model';
 import { MessageService } from '../message.service';
 
 @Component({
   selector: 'cms-message-edit',
   templateUrl: './message-edit.component.html',
-  styleUrls: ['./message-edit.component.css']
+  styleUrls: ['./message-edit.component.css'],
+  providers: [ MessageService ]
 })
-export class MessageEditComponent implements OnInit {
-  @ViewChild('subject', {static: false}) subjectRef: ElementRef;
-  @ViewChild('msgText', {static:false}) messageRef: ElementRef;
-  @Output() messageAdded = new EventEmitter<Message>();
-  public currentSender: string = "7";
-  
 
-  constructor(private messageService: MessageService) { }
+export class MessageEditComponent implements OnInit {
+  @ViewChild('subject', {static: true}) ref_subject!: ElementRef;
+  @ViewChild('message', {static: true}) ref_msgText!: ElementRef;  
+  //@Output() addMessageEvent = new EventEmitter<Message>();
+
+  currentSender : string = "Graham Pearl";
+
+  constructor(private messageService : MessageService) {    
+  }
 
   ngOnInit(): void {
   }
 
-  onSendMessage() {
-    const msgSubject = this.subjectRef.nativeElement.value;
-    const msgMessage = this.messageRef.nativeElement.value;
-    const newMessage = new Message("1", msgSubject, msgMessage, this.currentSender);
-    this.messageService.addMessage(newMessage);
-    this.onClear();
+  onClear() {
+    this.ref_subject.nativeElement.value = '';
+    this.ref_msgText.nativeElement.value = '';
   }
 
-  onClear() {
-    this.subjectRef.nativeElement.value = '';
-    this.messageRef.nativeElement.value = '';
+  onSendMessage() {
+    let the_subject = (String)(this.ref_subject.nativeElement.value);
+    let the_msgText = (String)(this.ref_msgText.nativeElement.value); 
+    
+    this.messageService.addMessage(new Message('1', ''+the_subject, ''+the_msgText,this.currentSender));
+    //this.addMessageEvent.emit();
   }
+  
 }
