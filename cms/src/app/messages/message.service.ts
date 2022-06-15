@@ -1,40 +1,32 @@
-import { Injectable } from '@angular/core';
-import { EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Message } from './message.model';
-import { MOCKMESSAGES } from './MOCKMESSAGES';
+import { MOCKMESSAGES  } from './MOCKMESSAGES';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class MessageService {
+  messagesChanged = new EventEmitter<Message[]>();
   messages: Message[] = [];
-  messageChangedEvent = new EventEmitter<Message[]>();
 
-  constructor() {
-    this.messages = MOCKMESSAGES;    
+  constructor() { 
+    this.messages = MOCKMESSAGES;
   }
 
-  public getMessages(): Message[] {
+  getMessages(){
     return this.messages.slice();
   }
 
-  getMessage(id: string): Message | null {
-    if (!this.messages) {
-      return null;
-    }
-
-    for (let message of this.messages) {
+  getMessage(id: string) {
+    for(let message of this.messages) {
       if (message.id === id) {
         return message;
       }
     }
     return null;
   }
-
-  addMessage(message : Message) {  
+  addMessage(message: Message) {
     this.messages.push(message);
-    this.messageChangedEvent.emit(this.messages.slice());
+    this.messagesChanged.emit(this.messages.slice());
   }
-
 }

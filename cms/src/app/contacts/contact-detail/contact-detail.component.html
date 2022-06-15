@@ -1,28 +1,30 @@
-<div class="panel-group">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <div class="row">
-        <div class="col-md-7">
-          <h3>{{contact.name}}</h3>
-          <img src="{{contact.imageUrl}}">
-        </div>
-        <div class="col-md-5">
-          <div class="row">
-            <a class="btn btn-info" routerLink="edit">Edit</a>
-            <a class="btn btn-danger" (click)="onDelete()">Delete</a>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="pull-left">
+            </div>
+            <h3>{{ contact.name }}</h3>
+              <img [src]="contact.imageUrl" alt="{{ contact.name }}">
+            <span class="pull-right">
+                <a routerLink="edit"><button class="btn btn-primary m-1 detail">Edit</button></a>
+                <a (click)="onDelete()"><button class="btn btn-danger m-1 detail">Delete</button></a>
+            </span>
           </div>
         </div>
       </div>
-    </div>
-    <div class="panel-body">
-      <div class="row">
-        <label>Email: </label>
-        <p *ngIf="(contact | json) != '{}'"> {{contact.email}}</p>
+
+      <div class="panel-body">
+        <p><span class="font-weight-bold">Email: {{ contact.email }} </span></p>
+        <p><span class="font-weight-bold">Phone: {{ contact.phone }}</span></p>
+        <p *ngFor="let contact of contact.group; let i = index">
+          <cms-contact-item [contact]="contact"></cms-contact-item>
+        </p>
       </div>
-      <div class="row">
-        <label>Phone: </label>
-        <p *ngIf="(contact | json) != '{}'">{{contact.phone}}</p>
-      </div>
+
+
     </div>
   </div>
 </div>

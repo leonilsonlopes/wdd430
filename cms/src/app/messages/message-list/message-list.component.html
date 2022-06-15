@@ -1,40 +1,24 @@
 <div class="row">
-  <div class="col-md-5">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="row pad-left-right">
-          <span class="title pull-left">Messages</span>
-        </div>
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-xs-12">
-
-            <!--Add tag to load the MessageItemComponent-->
-            <div class="panel-body" *ngFor="let one_message of messages">
-
-              <cms-message-item [message]="one_message" (click)="onAddMessage(one_message)"> </cms-message-item>
-
+   <div class="col-md-5">
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <div class="row pad-left-right">
+               <span class="title pull-left">Messages</span>
             </div>
-
-          </div>
-        </div>
+         </div>
+         <div class="panel-body">
+            <div class="row">
+               <div class="col-xs-12">
+                  <cms-message-item
+                        *ngFor="let message of messages"
+                        [message]="message"
+                        ></cms-message-item>
+               </div>
+            </div>
+         </div>
+         <div class="panel-footer">
+            <cms-message-edit (messageAdded)="onAddMessage($event)"></cms-message-edit>
+         </div>
       </div>
-      <div class="panel-footer">
-        <!--Add tag to load the MessageEditComponent-->
-
-        <!-- TODO:
-        We also need to modify the HTML to detect the addMessageEvent emitted from the 
-        MessageEditComponent when the end user clicks the Send button in the MessageEditComponent 
-        and call the onAddMessage() method to add the message to the message list. 
-        
-        Modify the <cms-message-edit> tag to watch for the addMessageEvent and call the onAddMessage()
-        method when the event occurs. Pass the message object passed with the event to the onAddMessage()
-        method.
-        <cms-message-edit (onSendMessage)="onAddMessage($event.)"></cms-message-edit>  
-      -->
-        <cms-message-edit></cms-message-edit>
-      </div>
-    </div>
-  </div>
+   </div>
 </div>
