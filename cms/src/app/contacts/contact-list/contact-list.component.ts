@@ -1,37 +1,36 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';;
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
 import { Contact } from '../contact.model';
 import { ContactService } from '../contact.service';
 import { Subscription } from 'rxjs';
 
-
 @Component({
   selector: 'cms-contact-list',
   templateUrl: './contact-list.component.html',
-  styleUrls: ['./contact-list.component.css']
+  styleUrls: ['../../app.component.css', './contact-list.component.css']
 })
 export class ContactListComponent implements OnInit, OnDestroy {
-
-  contacts: Contact[];
-
-  private contactChanged: Subscription;
+  contacts: Contact[] = [];
+  subscription: Subscription;
+  term: string;
 
   constructor(private contactService: ContactService) { }
 
-  ngOnInit(){
-    this.contacts = this.contactService.getContacts();
-    this.contactChanged = this.contactService.contactChangedEvent.subscribe(
-      (contacts: Contact[]) => {
-        this.contacts = contacts;
-      }
-    )
+  ngOnInit() {
+    this.contactService.contactChangedEvent.subscribe((contacts) => {
+      this.contacts = contacts.slice();
+    });
+
+    this.subscription = this.contactService.contactListChangedEvent.subscribe((contacts: Contact[]) => {
+      this.contacts = contacts;
+    })
   }
 
-  onSelected(contact: Contact){
-    this.contactService.contactSelectedEvent.emit(contact);
+  ngOnDestroy() {
+    this.subscription.unsubscribe();  
   }
 
-  ngOnDestroy(): void {
-    this.contactChanged.unsubscribe();
+  search(value: string) {
+    this.term = value;
   }
-
 }

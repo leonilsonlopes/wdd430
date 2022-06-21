@@ -1,28 +1,52 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { MOCKDOCUMENTS } from '../documents/MOCKDOCUMENTS';
 import { Documents } from './document.model';
 import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class DocumentService {
+export class DocumentService{
+  
+  documents: Documents[];
   selectedDocumentEvent = new EventEmitter<Documents>();
-  private documents: Documents[];
-
-  documentListChangedEvent = new Subject<Documents[]>();
-  private maxDocumentId: number;
-
-  constructor() { 
-   this.documents = MOCKDOCUMENTS;
-   this.maxDocumentId = this.getMaxId();
+  documentChangedEvent: EventEmitter<Documents[]> = new EventEmitter<Documents[]>();
+  documentListChangedEvent: Subject<Documents[]> = new Subject<Documents[]>();
+  maxDocumentId: number;
+  
+  constructor(private http: HttpClient) { 
+   this.getDocuments();
   }
 
-  getDocuments() {
-    return this.documents.slice();
+  getDocuments():void {
+    this
+    .http
+    .get('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com//documents.json').subscribe((documents: Documents[]) => {
+      this.documents = documents;
+      this.maxDocumentId = this.getMaxId();
+      this.documents.sort((lhs: Documents, rhs: Documents): number => {
+        if (lhs.id < rhs.id) {
+          return -1;
+        } else if (lhs.id === rhs.id) {
+          return 0;
+        } else {
+          return 1;
+        }
+      });
+      this.documentListChangedEvent.next(this.documents.slice());
+    }, (err: any) => {
+      console.error(err);
+    });
   }
 
-  getDocument(id: string){
+
+  getDocument(id: string): Documents{
+
+    if(!this.documents){
+      return null;
+    }
+
     for(let document of this.documents){
       if (document.id === id){
         return document;
@@ -53,10 +77,10 @@ addDocument(newDocument: Documents){
   this.maxDocumentId++;
   newDocument.id = (this.maxDocumentId).toString();
   this.documents.push(newDocument);
-  this.documentListChangedEvent.next(this.documents.slice());
+  this.storeDocuments();
 }
 
-updateDocument(originalDocument: Documents, newDocument: Documents){
+updateDocument(originalDocument: Documents, newDocument: Documents): void{
   if(!originalDocument || !newDocument){
     return;
   }
@@ -69,12 +93,11 @@ updateDocument(originalDocument: Documents, newDocument: Documents){
 
   newDocument.id = originalDocument.id;
   this.documents[pos] = newDocument;
-  let documentsListClone = this.documents.slice();
-  this.documentListChangedEvent.next(documentsListClone);
+  this.storeDocuments();
 
 }
 
-deleteDocument(document: Documents){
+deleteDocument(document: Documents): void{
   if(!document){
     return;
   }
@@ -86,8 +109,21 @@ deleteDocument(document: Documents){
   }
 
   this.documents.splice(pos, 1);
-  let documentListClone = this.documents.slice();
-  this.documentListChangedEvent.next(documentListClone);
+  this.storeDocuments();
 }
 
+storeDocuments(): void {
+  let json = JSON.stringify(this.documents);
+  let header = new HttpHeaders();
+  header.set('Content-Type', 'application/json');
+  this
+  .http
+  .put('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com//documents.json', json, {
+    headers: header
+  }).subscribe(() => {
+    this.documentListChangedEvent.next((this.documents.slice()));
+  });
 }
+}
+
+
