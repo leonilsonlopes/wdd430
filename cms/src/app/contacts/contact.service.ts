@@ -21,7 +21,7 @@ export class ContactService {
   getContacts(): void {
     this
     .http
-    .get('https://wdd-cms-default-rtdb.firebaseio.com/contacts.json')
+    .get('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com/contacts.json')
     .subscribe((contacts: Contact[]) => {
       this.contacts = contacts;
       this.maxContactID = this.getMaxID();
@@ -108,7 +108,7 @@ export class ContactService {
     header.set('Content-Type', 'application/json');
     this
     .http
-    .put('https://wdd-cms-default-rtdb.firebaseio.com//contacts.json', json, {
+    .put('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com/contacts.json', json, {
       headers: header
     }).subscribe(() => {
       this.contactListChangedEvent.next((this.contacts.slice()));

@@ -17,7 +17,7 @@ export class MessageService {
   }
 
   getMessagesUrl(){
-    this.http.get('https://wdd-cms-default-rtdb.firebaseio.com/messages.json')
+    this.http.get('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com/messages.json')
     .subscribe((messages: Message[]) => {
       this.messages = messages;
       this.maxMessageId = this.getMaxId();
@@ -71,7 +71,7 @@ export class MessageService {
     let json = JSON.stringify(this.messages);
     let header = new HttpHeaders();
     header.set('Content-Type', 'application/json');
-    this.http.put('https://wdd-cms-default-rtdb.firebaseio.com/messages.json', json, {
+    this.http.put('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com/messages.json', json, {
       headers: header
     }).subscribe( () =>{
       this.messagesChanged.next( (this.messages.slice()) )

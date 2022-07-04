@@ -22,7 +22,7 @@ export class DocumentService{
   getDocuments():void {
     this
     .http
-    .get('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com//documents.json').subscribe((documents: Documents[]) => {
+    .get('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com/documents.json').subscribe((documents: Documents[]) => {
       this.documents = documents;
       this.maxDocumentId = this.getMaxId();
       this.documents.sort((lhs: Documents, rhs: Documents): number => {
@@ -118,7 +118,7 @@ storeDocuments(): void {
   header.set('Content-Type', 'application/json');
   this
   .http
-  .put('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com//documents.json', json, {
+  .put('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com/documents.json', json, {
     headers: header
   }).subscribe(() => {
     this.documentListChangedEvent.next((this.documents.slice()));
