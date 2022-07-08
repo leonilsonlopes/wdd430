@@ -20,11 +20,13 @@ export class DocumentService{
   }
 
   getDocuments():void {
-    this
-    .http
-    .get('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com/documents.json').subscribe((documents: Documents[]) => {
-      this.documents = documents;
+    this.http.get< {message: string, documents: Documents[]}>('http://localhost:3000/documents')
+
+    .subscribe((documentData) => {
+
+      this.documents = documentData.documents;
       this.maxDocumentId = this.getMaxId();
+      
       this.documents.sort((lhs: Documents, rhs: Documents): number => {
         if (lhs.id < rhs.id) {
           return -1;
@@ -34,7 +36,9 @@ export class DocumentService{
           return 1;
         }
       });
+
       this.documentListChangedEvent.next(this.documents.slice());
+
     }, (err: any) => {
       console.error(err);
     });
@@ -69,47 +73,80 @@ getMaxId(): number {
   return maxId;
 }
 
-
-addDocument(newDocument: Documents){
-  if(newDocument == undefined || newDocument == null){
-    return
+addDocument(document: Documents) {
+  if (!document) {
+    return;
   }
-  this.maxDocumentId++;
-  newDocument.id = (this.maxDocumentId).toString();
-  this.documents.push(newDocument);
-  this.storeDocuments();
+
+  // make sure id of the new Document is empty
+  document.id = '';
+
+  const headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+  // add to database
+  this.http.post<{ message: string, document: Documents }>('http://localhost:3000/documents',
+    document,
+    { headers: headers })
+    .subscribe(
+      (responseData) => {
+        // add new document to documents
+        this.documents.push(responseData.document);
+        this.documentListChangedEvent.next(this.documents.slice());
+      }
+    );
 }
 
-updateDocument(originalDocument: Documents, newDocument: Documents): void{
-  if(!originalDocument || !newDocument){
+
+
+updateDocument(originalDocument: Documents, newDocument: Documents) {
+  if (!originalDocument || !newDocument) {
     return;
   }
 
-  let pos = this.documents.indexOf(originalDocument);
-  
-  if (pos < 0){
-    return;
-  } 
+  const pos = this.documents.findIndex(d => d.id === originalDocument.id);
 
+  if (pos < 0) {
+    return;
+  }
+
+  // set the id of the new Document to the id of the old Document
   newDocument.id = originalDocument.id;
-  this.documents[pos] = newDocument;
-  this.storeDocuments();
+ // newDocument._id = originalDocument._id;
 
+  const headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+  // update database
+  this.http.put('http://localhost:3000/documents/' + originalDocument.id,
+    newDocument, { headers: headers })
+    .subscribe(
+      (response: Response) => {
+        this.documents[pos] = newDocument;
+        this.documentListChangedEvent.next(this.documents.slice());
+      }
+    );
 }
 
-deleteDocument(document: Documents): void{
-  if(!document){
+
+deleteDocument(document: Documents) {
+
+  if (!document) {
     return;
   }
 
-  let pos = this.documents.indexOf(document);
+  const pos = this.documents.findIndex(d => d.id === document.id);
 
-  if(pos < 0) {
+  if (pos < 0) {
     return;
   }
 
-  this.documents.splice(pos, 1);
-  this.storeDocuments();
+  // delete from database
+  this.http.delete('http://localhost:3000/documents/' + document.id)
+    .subscribe(
+      (response: Response) => {
+        this.documents.splice(pos, 1);
+        this.documentListChangedEvent.next(this.documents.slice());
+      }
+    );
 }
 
 storeDocuments(): void {
@@ -118,12 +155,14 @@ storeDocuments(): void {
   header.set('Content-Type', 'application/json');
   this
   .http
-  .put('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com/documents.json', json, {
+  .put('https://wdd430-leonilsonlopes-default-rtdb.//documents.json', json, {
     headers: header
   }).subscribe(() => {
     this.documentListChangedEvent.next((this.documents.slice()));
   });
 }
 }
+
+
 
 

@@ -17,10 +17,13 @@ export class MessageService {
   }
 
   getMessagesUrl(){
-    this.http.get('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com/messages.json')
+    this.http.get('http://localhost:3000/messages')
+
     .subscribe((messages: Message[]) => {
+
       this.messages = messages;
       this.maxMessageId = this.getMaxId();
+      
       this.messages.sort((lhs: Message, rhs: Message): number => {
       if (lhs.id < rhs.id) {
         return -1;
@@ -30,6 +33,7 @@ export class MessageService {
         return 1;
       }
     });
+    
     this.messagesChanged.next(this.messages.slice());
   }, (err: any) => {
     console.error(err);
@@ -49,9 +53,23 @@ export class MessageService {
     return null;
   }
 
+
+  
+
   addMessage(message: Message) {
-    this.messages.push(message);
-    this.storeMessages();
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http
+      .post<{ message: String; newMessage: Message }>(
+        'http://localhost:3000/messages',
+        message,
+        { headers: headers }
+      )
+      .subscribe((responseData) => {
+        this.messages.push(responseData.newMessage);
+        this.messagesChanged.emit(this.messages.slice());
+      });
+
   }
 
 
@@ -71,7 +89,7 @@ export class MessageService {
     let json = JSON.stringify(this.messages);
     let header = new HttpHeaders();
     header.set('Content-Type', 'application/json');
-    this.http.put('https://wdd430-leonilsonlopes-default-rtdb.firebaseio.com/messages.json', json, {
+    this.http.put('https://wdd430-leonilsonlopes-default-rtdb./messages.json', json, {
       headers: header
     }).subscribe( () =>{
       this.messagesChanged.next( (this.messages.slice()) )
